@@ -1,0 +1,230 @@
+﻿<div id="messageContainer"></div>
+
+<div class="card-box mb-30" style="padding:10px;">
+
+    <div class="table-responsive">
+       
+        <div id="no-more-tables" style="font-size:12.0pt;overflow:auto;max-height:380px;">
+            <table class="data-table table stripe hover nowrap" id="tblDataList" style="width: 100%; white-space: nowrap; font-size: 8.0pt">
+                <thead>
+                    <tr>
+                        <th class="text-center max-desktop">Brand Id</th>
+                        <th class="text-center max-desktop">Material Id</th>
+                        <th class="text-center max-desktop">Product</th>
+                        <th class="text-center max-desktop">Brand Code</th>
+                        <th class="text-center max-desktop">Brand Name</th>
+                        <th class="text-center max-desktop">Rate</th>
+                        <th class="text-center max-desktop">Unit ID</th>
+                        <th class="text-center max-desktop">Unit</th>
+                        <th class="text-center max-desktop">Effective_Dt</th>
+                        <th class="text-center max-desktop">Remarks</th>
+                        <th class="text-center max-desktop">Edit</th>
+                        <th class="text-center max-desktop">Delete</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+</div>
+    </div>
+
+
+<div style="display:none;" id="div_ToPrint">
+</div>
+
+<!-- js -->
+
+<script src="~/src/plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="~/src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/src/plugins/datatables/js/dataTables.responsive.min.js"></script>
+<script src="~/src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
+<!-- buttons for Export datatable -->
+
+<script src="~/src/plugins/datatables/js/dataTables.buttons.min.js"></script>
+<script src="~/src/plugins/datatables/js/buttons.bootstrap4.min.js"></script>
+<script src="~/src/plugins/datatables/js/buttons.print.min.js"></script>
+<script src="~/src/plugins/datatables/js/buttons.html5.min.js"></script>
+<script src="~/src/plugins/datatables/js/buttons.flash.min.js"></script>
+<script src="~/src/plugins/datatables/js/pdfmake.min.js"></script>
+<script src="~/src/plugins/datatables/js/vfs_fonts.js"></script>
+<!-- Datatable Setting js -->
+<script src="~/vendors/scripts/datatable-setting.js"></script>
+
+<style>
+    .dataTable > thead > tr > th[class*="sort"]:before,
+    .dataTable > thead > tr > th[class*="sort"]:after {
+        content: "" !important;
+    }
+
+    .DataTables_sort_icon, .css_right, .ui-icon, .ui-icon-caret-2-n-s {
+        display: none !important;
+    }
+
+    .dataTables_processing {
+        z-index: 3000;
+    }
+
+    .table td, .table th {
+        padding: 0.25rem;
+        vertical-align: top;
+        border: 1px solid #dee2e6;
+    }
+
+    .table th {
+        background-color: #aab2ba;
+    }
+</style>
+
+<script>
+        $(document).ready(function () {
+       
+            var table = $('#tblDataList').DataTable({
+                destroy: true,
+                "ajax": {
+                    "url": "../Brand/_Brand_ListDATA",
+                    "type": "POST",
+                    "data": function (d) {
+                    },
+                    "datatype": "json"
+                },
+                "columns": [
+
+                    { "data": "BRAND_ID", "name": "BRAND_ID", "className": "text-center" },
+                
+                    { "data": "Material_Id", "name": "Material_Id", "className": "text-center" },
+               
+                    { "data": "Material_Name", "name": "Material_Name", "className": "text-center" },
+                    { "data": "Brand_Code", "name": "Brand_Code", "className": "text-center" },
+                    { "data": "Brand", "name": "Brand", "className": "text-center" },
+            
+                
+                    { "data": "Rate", "name": "Rate", "className": "text-center" },
+
+                     { "data": "UOM_ID", "name": "UOM_ID", "className": "text-center" },
+                
+                      { "data": "UOM", "name": "UOM", "className": "text-center" },
+
+
+                    { "data": "Effective_Dt", "name": "Effective_Dt", "className": "text-center" },
+                    { "data": "Remark", "name": "Remark", "className": "text-center" },
+             
+
+           
+                    {
+                        "className": "text-center", "mRender": function (nTd, sData, oData, iRow, iCol) {
+
+                            return oData.BRAND_ID ? '<a href="#" class="btn-edit icon-copy dw dw-edit2" name="Edit" style="width:auto;" id="btnEdit"></a>' : '';
+
+                        }
+                    },
+                {
+                        "className": "text-center", "mRender": function (nTd, sData, oData, iRow, iCol) {
+                      
+                            return oData.BRAND_ID ? '<a href="#" class="btn-delete icon-copy dw dw-delete-3" name="Delete" style="color: #e95959; width:auto;"></a>' : '';
+
+                        }
+            },
+                ],
+                "columnDefs": [
+             {
+                 "targets": [0, 1],
+                 "visible": false,
+                 "searchable": false
+             }
+                ],
+                "serverSide": "true",
+                "order": [0, "asc"],
+                "processing": "true",
+                "language": {
+                },
+                "oLanguage": {
+
+                    "sSearch": "Quick Search:"
+
+                },
+                responsive: true,
+           
+            });
+            $(document).on('click', '.btn-edit', function (event) {
+                $('#btnSubmit').hide();
+                $('#btnUpdate').show();
+                var $row = $(this).closest('tr');
+                var rowIndex = $row.index();
+                var rowData = table.row(rowIndex).data();
+
+                var brandId = rowData.BRAND_ID;
+                var material = rowData.Material_Id;
+                var brandName = rowData.Brand;
+                var rate = rowData.Rate;
+                var unitid = rowData.UOM_ID;
+                var unit = rowData.UOM;
+                var effectiveDate = rowData.Effective_Dt;
+                var formattedEffectiveDate = moment(effectiveDate, 'DD/MM/YYYY').format('DD MMMM YYYY');
+                var remark = rowData.Remark;
+
+                $('#ddlMaterial').val(material).prop('disabled', true);
+                $('#txtBrand').val(brandName).prop('disabled', true);
+                $('#txtRate').val(rate);
+                $('#ddlUnit').val(unitid).prop('disabled', true);
+                $('#txtEffDate').val(formattedEffectiveDate);
+                $('#txtRemark').val(remark);
+
+                $('#hdnSelectedMaterialId').val(material);
+                $('#hdnSelectedBrand').val(brandName);
+                $('#hdnOldBRAND_ID').val(brandId);
+                $('#hdnSelectedUOM_ID').val(unitid);
+            });
+
+
+
+            $(document).on('click', '.btn-delete', function (event) {
+                var $row = $(this).closest('tr');
+                var rowIndex = $row.index();
+                var rowData = table.row(rowIndex).data();
+                var brandId = rowData.BRAND_ID;
+                clearMessage();
+                if (confirm("Are you sure you want to delete this record?")) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteBrand", "Brand")',
+                        type: 'POST',
+                        data: { brandID: brandId },
+                        success: function (response) {
+                            showMessage(response.success, response.message);
+                            if (response.success) {
+                                $row.remove();
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            showMessage(false, 'An error occurred: ' + error);
+                        }
+                    });
+                }
+                $('#hdnBRAND_ID').val(brandId);
+            });
+
+            function showMessage(success, message) {
+                var messageContainer = $('#messageContainer');
+                messageContainer.empty();
+
+                if (success) {
+                    messageContainer.html('<div class="alert alert-success alert-dismissible" role="alert">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' + message + '</div>');
+                } else {
+                    messageContainer.html('<div class="alert alert-danger alert-dismissible" role="alert">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' + message + '</div>');
+                }
+            }
+            function clearMessage() {
+                var messageContainer = $('#messageContainer');
+
+                messageContainer.empty();
+            }
+
+        });
+      
+   
+
+</script>

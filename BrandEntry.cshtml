@@ -1,0 +1,94 @@
+﻿@model BusinessLayer.Entity.Brand_Entry
+
+@{
+    ViewBag.Title = "BrandEntry";
+    Layout = "~/Views/Shared/_MainDashboard.cshtml";
+}
+<link href="~/Content/ResponsiveTable.css" rel="stylesheet" />
+@using (Html.BeginForm("BrandEntry", "Brand", FormMethod.Post, new { @id = "frmBrandEntry", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    Html.RenderPartial("_Alerts");
+
+    <div class="pd-20 card-box mb-30">
+
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2 col-form-label"> Product</label>
+            <div class="col-sm-12 col-md-2">
+                @Html.DropDownListFor(x => x.Material_Id, Model.MaterialList, new { @class = "form-control", @id = "ddlMaterial", @autocomplete = "off", @data_placeholder = "Select Product", @style = "width: 100%;" })
+                @Html.ValidationMessageFor(x => x.Material_Id, "", new { @id = "spnErr_ddlMaterial" })
+                @Html.HiddenFor(x => x.Material_Id, new { @id = "hdnSelectedMaterialId" })
+
+            </div>
+
+            <label class="col-sm-12 col-md-2 col-form-label">Brand</label>
+            <div class="col-sm-12 col-md-6">
+                @Html.TextBoxFor(x => x.Brand, new { @class = "form-control", @id = "txtBrand", @autocomplete = "off", @style = "width: 100%;" })
+                @Html.ValidationMessageFor(x => x.Brand, "", new { @id = "spnErr_txtBrand" })
+                @Html.HiddenFor(x => x.Brand, new { @id = "hdnSelectedBrand" })
+
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2 col-form-label"> Rate</label>
+            <div class="col-sm-12 col-md-2">
+                @Html.TextBoxFor(x => x.Rate, new { @class = "form-control numeric", @id = "txtRate", @autocomplete = "off", @style = "width:100%;" })
+                @Html.ValidationMessageFor(x => x.Rate, "", new { @id = "spnErr_txtRate" })
+            </div>
+
+            <label class="col-sm-12 col-md-2 col-form-label"> Unit </label>
+            <div class="col-sm-12 col-md-2">
+                @Html.DropDownListFor(x => x.UOM_ID, Model.UnitList, "Select Unit", new { @class = "form-control", @id = "ddlUnit", @autocomplete = "off", @data_placeholder = "Select Unit", @style = "width:100%;", })
+                @Html.ValidationMessageFor(x => x.UOM_ID, "", new { @id = "spnErr_ddlUnit" })
+                @Html.HiddenFor(x => x.UOM_ID, new { @id = "hdnSelectedUOM_ID" }) <!-- Hidden input field to hold the selected value -->
+
+            </div>
+
+            <label class="col-sm-12 col-md-1 col-form-label">Effective Date</label>
+            <div class="col-sm-12 col-md-3">
+                @Html.TextBoxFor(x => x.EffDate, "{0:dd:MMMM:yyyy}", new { @class = "form-control date-picker", @id = "txtEffDate", @autocomplete = "off", @data_placeholder = "Select Effective Date" })
+                @Html.ValidationMessageFor(x => x.EffDate, "", new { @id = "spnErr_txtEffDate" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-12 col-md-2 col-form-label"> Remarks</label>
+            <div class="col-sm-12 col-md-10">
+                @Html.TextBoxFor(x => x.Remark, new { @class = "form-control", @id = "txtRemark", @autocomplete = "off", @style = "width: 100%;" })
+                @Html.ValidationMessageFor(x => x.Remark, "", new { @id = "spnErr_txtRemark" })
+            </div>
+
+            <div class="col-md-12" style="padding-top:5px; padding-bottom:15px; padding-right:13px;text-align:center;">
+                <input type="submit" class="btn btn-success" value="Save" name="Save" style="width:auto;" id="btnSubmit" />
+                <input type="submit" class="btn btn-warning" value="Update" name="Update" style="width: auto;" id="btnUpdate" />
+                <input type="reset" class="btn btn-danger" value="Reset" style="width:auto;" id="btnReset" />
+
+                @Html.HiddenFor(x => x.BRAND_ID, new { @id = "hdnBRAND_ID" })
+                @Html.HiddenFor(x => x.oldBrandId, new { @id = "hdnOldBRAND_ID" })
+            </div>
+        </div>
+
+    </div>
+
+    <div id="divPartial"></div>
+}
+
+<script src="~/assets/js/jquery-2.1.4.min.js"></script>
+<script src="~/Scripts/Custom/customValidation.js"></script>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#divPartial").load("_Brand_List/Brand");
+        $('#btnUpdate').hide();
+
+    
+      
+        $('#btnReset').on("click", function () {
+            var url = '@Url.Action("BrandEntry","Brand")';
+            window.location.href = url;
+        });
+    });
+</script>

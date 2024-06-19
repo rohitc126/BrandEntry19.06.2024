@@ -1,0 +1,20 @@
+
+        public List<Unit_Master> GetUnit()
+        {
+            DataTable dt = new DataAccess(sqlConnection.GetConnectionString_SGX()).GetDataTable("usp_Fill_UOMmaster", CommandType.StoredProcedure);
+            List<Unit_Master> list = new List<Unit_Master>();
+            if(dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    list.Add(new Unit_Master
+                    {
+                        UOM_ID = Convert.ToInt32(row["UOM_ID"] == DBNull.Value ? 0 : row["UOM_ID"]),
+                        UOM = Convert.ToString(row["UOM"] == DBNull.Value ? "" : row["UOM"]),
+                        UOM_Code = Convert.ToString(row["UOM_Code"] == DBNull.Value ? "" : row["UOM_Code"])
+                    });
+                }
+    
+            }
+            return list;
+        }
