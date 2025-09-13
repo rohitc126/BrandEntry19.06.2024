@@ -1,4 +1,4 @@
-﻿using BusinessLayer;
+using BusinessLayer;
 using BusinessLayer.DAL;
 using BusinessLayer.Entity;
 using System;
