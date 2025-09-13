@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Configuration;
+
+namespace BusinessLayer
+{
+    class sqlConnection
+    {
+        //-- code to get a connection object
+        public static SqlConnection GetConnection()
+        {
+            string str = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            SqlConnection con = new SqlConnection(str);
+            con.Open();
+            return con;
+        }
+        //-- code to make sure to close connection and dispose the object
+        public static void Dispose(SqlConnection con)
+        {
+            if (con.State == System.Data.ConnectionState.Open)
+                con.Close();
+            con.Dispose();
+        }
+
+        // -- Only Connection String Return
+        public static string GetConnectionString()
+        {
+            string str = "Data Source=180.92.171.190;Initial Catalog=hrm;Persist Security Info=True;User ID=sa;Password=P@$$m0rb;";
+           // string str = "Data Source=1.7.39.250;Initial Catalog=hrm;Persist Security Info=True;User ID=sa;Password=P@$$m0rb;";
+            // string str = "Data Source=localhost;Initial Catalog=hrm;Persist Security Info=True;User ID=sa;Password=P@$$m0rb;";
+          return str;
+        }
+
+        public static string GetConnectionString_SGX()
+        {
+            string str = "Data Source=180.92.171.190;Initial Catalog=SGX_TEST;Persist Security Info=True;User ID=sa;Password=P@$$m0rb;";          
+            //string str = "Data Source=1.7.39.250;Initial Catalog=SGX;Persist Security Info=True;User ID=sa;Password=P@$$m0rb;";
+          //string str = "Data Source=localhost;Initial Catalog=SGX;Persist Security Info=True;User ID=sa;Password=P@$$m0rb;";
+            return str;
+        }
+
+        public static string GetConnectionString_Weigh()
+        {
+            //string str = "Data Source=180.92.171.190;Initial Catalog=SGX;Persist Security Info=True;User ID=sa;Password=P@$$m0rb;";
+            //string str = "Data Source=192.168.1.208;Initial Catalog=WebWb;Persist Security Info=True;User ID=sa;Password=P@$$m0rb;";
+            string str = "Data Source=115.247.75.126;Initial Catalog=WebWb;Persist Security Info=True;User ID=sa;Password=P@$$m0rb;";
+            return str;
+        }
+    }
+}
